@@ -76,7 +76,7 @@ with open('data/packageData.csv', mode='r') as f:
             package = packages(id, address,city,state,zip,deadline,mass,notes)
             packageList.append(package)
 #pull location data
-with open('data/distanceTest.csv', mode='r') as f:
+with open('data/distanceData.csv', mode='r') as f:
         reader = csv.reader(f)
         locationList = []
         for row in reader:
@@ -87,9 +87,4 @@ with open('data/distanceTest.csv', mode='r') as f:
             locationList.append(locationObject)
 
 
-for packages in packageList:
-    i = 0
-    if packageList[i].address == locationList[4].address:
-        print("Match")
-    i = i + 1
 
