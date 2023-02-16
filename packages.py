@@ -4,11 +4,8 @@ truckOne = [] #leaves asap
 truckTwo = [] #levas at 1030
 truckThree = [] #contains remaining packages. Truck one will drive this after completion.
 
-from hashTable import HashTable
-
 with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
     reader = csv.reader(file)
-
     #pull data in to variables Time Complexity: O(n)
     for row in reader:
         id = row[0]
@@ -24,8 +21,7 @@ with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
         status = 'at hub'
         #assemble variables into package object
         package = [id,address,city,state,zip,deadline,kilo,notes,start,location,status]
-        table = HashTable()
-        table.insert(id, package)
+
         #assign packages to truck two
         if 'Can' in package[7]:
             truckTwo.append(package)
@@ -48,6 +44,17 @@ with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
         if package[0] == '6' or package[0] == '25':
             truckTwo.remove(package)
             #13,14,15,16,19,20
+
+
+def firstTruck():
+    return truckOne
+def secondTruck():
+    return truckTwo
+def thirdTruck():
+    return truckThree
+def getPackages(key):
+    return table(key)
+
 
 with open('data/distanceData.csv', mode='r', encoding='utf-8-sig') as file:
     distanceList = list(csv.reader(file))

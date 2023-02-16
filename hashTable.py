@@ -2,36 +2,60 @@
 # Class to hold hashtable/spicy dictionary
 class HashTable:
     def __init__(self, initial_capacity=10):
-        self.table = []
-        for i in range(initial_capacity):
-            self.table.append([])
-    def insert(self, key, item):
-        #
-        bucket = hash(key) % len(self.table)
-        hashList = self.table[bucket]
+        self.initial_capacity = initial_capacity
+        self.hash_table = self.create_bucket()
+    def create_bucket(self):
+        return [[] for _ in range(self.initial_capacity)]
 
-        for keyPair in hashList:
-            # print (key_value)
-            if keyPair[0] == key:
-                keyPair[1] = item
-                return True
-        key_value = [key, item]
-        hashList.append(key_value)
-        return True
+    def set (self, key,value):
+        hashKey = hash(key) % self.initial_capacity
+        bucket = self.hash_table[hashKey]
+        found = False
 
-    def search(self, key):
-        bucket = hash(key) % len(self.table)
-        hashList = self.table[bucket]
+        for index,record in enumerate(bucket):
+            recordKey, recordValue = record
+            if recordKey == key:
+                found = True
+                break
 
-        for keyPair in hashList:
-            if keyPair[0] == key:
-                return keyPair[1]
-        return None
+        if found:
+            bucket[index] = (key,value)
+        else:
+            bucket.append((key,value))
 
-    def remove(self, key):
-        bucket = hash(key) % len(self.table)
-        hashList = self.table[bucket]
+    def getValue(self,key):
+        hashKey = hash(key) % self.initial_capacity
+        bucket = self.hash_table[hashKey]
+        found = False
 
-        for keyPair in hashList:
-            if keyPair[0] == key:
-                hashList.remove([keyPair[0], keyPair[1]])
+        for index, record in enumerate(bucket):
+            recordKey, recordValue = record
+            if recordKey == key:
+                found = True
+                break
+        if found:
+            return recordValue
+        else:
+            return None
+
+    def removeValue(self,key):
+        hashKey = hash(key) % self.initial_capacity
+        bucket = self.hash_table[hashKey]
+        found = False
+
+        for index, record in enumerate(bucket):
+            recordKey, recordValue = record
+
+            if recordKey == key:
+                found = True
+                break
+            if found:
+                bucket.pop(index)
+            return
+
+    def __str__(self):
+        return "".join(str(item) for item in self.hash_table)
+
+
+
+print(table)
