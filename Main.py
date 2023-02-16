@@ -1,27 +1,15 @@
 import csv
-from hashTable import HashTable
 
 truckOne = [] #leaves asap
 truckTwo = [] #levas at 1030
 truckThree = [] #contains remaining packages. Truck one will drive this after completion.
-class package:
-    def __int__(self):
-        self.id = id
-        self.address = address
-        self.city = city
-        self.state = state
-        self.zip = zip
-        self.deadline = deadline
-        self.kilo = kilo
-        self.notes = notes
-        self.start = start
-        self.location = location
-        self.status = status
 
+from hashTable import HashTable
 
-with open("data/packageData.csv") as file:
+with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
     reader = csv.reader(file)
-    #pull data in to variables
+
+    #pull data in to variables Time Complexity: O(n)
     for row in reader:
         id = row[0]
         address = row[1]
@@ -36,6 +24,8 @@ with open("data/packageData.csv") as file:
         status = 'at hub'
         #assemble variables into package object
         package = [id,address,city,state,zip,deadline,kilo,notes,start,location,status]
+        table = HashTable()
+        table.insert(id, package)
         #assign packages to truck two
         if 'Can' in package[7]:
             truckTwo.append(package)
@@ -48,33 +38,19 @@ with open("data/packageData.csv") as file:
             truckOne.append(package)
         if package[0] == '2' or package[0] == '4':
             truckOne.append(package)
-
-
+        # remaining packages
         if package not in truckOne and package not in truckTwo and package not in truckThree:
             if len(truckTwo) < len(truckThree):
                 truckTwo.append(package)
-
             else:
                 truckThree.append(package)
+        # removing duplicates.
         if package[0] == '6' or package[0] == '25':
             truckTwo.remove(package)
             #13,14,15,16,19,20
-print('truck one:',len(truckOne))
-print('truck two',len(truckTwo))
-print('truck three', len(truckThree))
 
-i = 0
+with open('data/distanceData.csv', mode='r', encoding='utf-8-sig') as file:
+    distanceList = list(csv.reader(file))
+with open('data/locationNames.csv', mode='r', encoding='utf-8-sig') as names:
+    nameList = list(csv.reader(names))
 
-for packages in truckOne:
-    print(truckOne[i])
-    i = i + 1
-i = 0
-print(" ")
-for packages in truckTwo:
-    print(truckTwo[i])
-    i = i + 1
-i = 0
-print(" ")
-for packages in truckThree:
-    print(truckThree[i])
-    i = i + 1
