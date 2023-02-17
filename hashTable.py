@@ -58,4 +58,3 @@ class HashTable:
 
 
 
-print(table)

@@ -1,10 +1,11 @@
 import csv
-
+from hashTable import HashTable
 truckOne = [] #leaves asap
 truckTwo = [] #levas at 1030
 truckThree = [] #contains remaining packages. Truck one will drive this after completion.
 
 with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
+    HT = HashTable()
     reader = csv.reader(file)
     #pull data in to variables Time Complexity: O(n)
     for row in reader:
@@ -44,7 +45,7 @@ with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
         if package[0] == '6' or package[0] == '25':
             truckTwo.remove(package)
             #13,14,15,16,19,20
-
+        HT.set(id,package)
 
 def firstTruck():
     return truckOne
@@ -52,8 +53,8 @@ def secondTruck():
     return truckTwo
 def thirdTruck():
     return truckThree
-def getPackages(key):
-    return table(key)
+def getPackages():
+    return HT
 
 
 with open('data/distanceData.csv', mode='r', encoding='utf-8-sig') as file:
