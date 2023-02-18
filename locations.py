@@ -1,5 +1,7 @@
 import csv
 import heapq
+import sys
+from typing import Type
 
 # iPair ==> Integer Pair
 iPair = tuple
@@ -42,39 +44,29 @@ class Graph:
                     # Updating distance of v
                     dist[v] = dist[u] + weight
                     heapq.heappush(pq, (dist[v], v))
-
         # Print shortest distances stored in dist[]
         for i in range(self.V):
             print(f"{i} \t\t {dist[i]}")
 
+        print(min(dist))
 
-# Driver's code
-if __name__ == "__main__":
     # create the graph given in above figure
-
+with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
+    distances = list(csv.reader(distance))
     v = 27
     k = Graph(v)
-
     for i in range(27):
         for j in range(27):
+            if distances[i][j] == "" or '':
+                k.addEdge(i,j,sys.maxsize)
+            else:
+                weight = float(distances[i][j])
+                k.addEdge(i,j,weight)
+
+    k.shortestPath(1)
 
 
-    k.addEdge(0,1,7.2)
-    k.addEdge(0,2,3.8)
-    k.addEdge(0,3,11)
-    k.addEdge(0,4,2.2)
-    k.addEdge(0,5,3.5)
-    k.addEdge(0,6,10.9)
-    k.addEdge(0,7,8.6)
-    k.addEdge(0,8,7.6)
-    k.addEdge(0,9,5.2)
-    k.addEdge(0,10,4.4)
-    k.addEdge(0,11,3.7)
-    k.addEdge(0,12,7.6)
-    k.addEdge(0,13,2.0)
-
-
-    k.shortestPath(0)
+    # k.shortestPath(0)
 
 with open("data/distanceData.csv",mode='r',encoding='utf-8-sig') as distance:
     distances = list(csv.reader(distance))
