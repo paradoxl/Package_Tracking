@@ -1,16 +1,11 @@
 import csv
 import heapq
 import sys
-from typing import Type
-
-# iPair ==> Integer Pair
-iPair = tuple
-
-
-# This class represents a directed graph using
-# adjacency list representation
+from hashTable import HashTable
+import packages
+table = HashTable()
 class Graph:
-    def __init__(self, V: int):  # Constructor
+    def __init__(self, V: int):
         self.V = V
         self.adj = [[] for _ in range(V)]
 
@@ -18,37 +13,35 @@ class Graph:
         self.adj[u].append((v, w))
         self.adj[v].append((u, w))
 
-    # Prints shortest paths from src to all other vertices
     def shortestPath(self, src: int):
-        # Create a priority queue to store vertices that
-        # are being preprocessed
+
         pq = []
         heapq.heappush(pq, (0, src))
-
-        # Create a vector for distances and initialize all
-        # distances as infinite (INF)
         dist = [float('inf')] * self.V
         dist[src] = 0
 
         while pq:
-            # The first vertex in pair is the minimum distance
-            # vertex, extract it from priority queue.
-            # vertex label is stored in second of pair
             d, u = heapq.heappop(pq)
 
-            # 'i' is used to get all adjacent vertices of a
-            # vertex
             for v, weight in self.adj[u]:
-                # If there is shorted path to v through u.
                 if dist[v] > dist[u] + weight:
-                    # Updating distance of v
                     dist[v] = dist[u] + weight
                     heapq.heappush(pq, (dist[v], v))
-        # Print shortest distances stored in dist[]
-        for i in range(self.V):
-            print(f"{i} \t\t {dist[i]}")
 
-        print(min(dist))
+        #retruns the min value and sets current location to max value to not create loop
+        for i in range(self.V-1):
+            print(f"{i} \t\t {dist[i]}")
+            table.set(dist[i], i)
+            if(i == src):
+                dist[i] = sys.maxsize
+        with open("data/locationNames.csv",mode='r', encoding='utf-8-sig') as names:
+            name = csv.reader(names)
+
+            for names in name:
+                if int(names[0]) == table.getValue(min(dist)):
+                    print("location name for next stop", names[1])
+            print("Location id for next stop", table.getValue(min(dist)))
+            print("minmum distance location from this stop" ,min(dist))
 
     # create the graph given in above figure
 with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
@@ -63,12 +56,17 @@ with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
                 weight = float(distances[i][j])
                 k.addEdge(i,j,weight)
 
-    k.shortestPath(1)
+    # k.shortestPath(3)
 
 
-    # k.shortestPath(0)
+with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
+    name = csv.reader(names)
+    print(type(packages.firstTruck()))
+    for names in name:
+        if packages.firstTruck().__contains__(names[1]):
 
-with open("data/distanceData.csv",mode='r',encoding='utf-8-sig') as distance:
-    distances = list(csv.reader(distance))
+            k.shortestPath(names[0])
+
+
 
 
