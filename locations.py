@@ -61,11 +61,13 @@ with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
 
 with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
     name = csv.reader(names)
-    print(type(packages.firstTruck()))
-    for names in name:
-        if packages.firstTruck().__contains__(names[1]):
+    i = 0
 
-            k.shortestPath(names[0])
+    for names in name:
+        # print("list",names[1])
+        if packages.firstTruck()[i][1].__contains__(names[1]):
+            k.shortestPath(int(names[0]))
+        i += 1
 
 
 
