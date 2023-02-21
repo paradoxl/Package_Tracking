@@ -45,6 +45,8 @@ class Graph:
             totals =+ min(dist)
             print("distance traveled", totals)
 
+
+
     # create the graph given in above figure
 with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
     distances = list(csv.reader(distance))
@@ -62,18 +64,43 @@ with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
 
 
 with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
-    name = csv.reader(names)
-    #place this in a list so we can also remove it for the loop to function.
-    i = 0
+    name = list(csv.reader(names))
+#
+#     def locationNames():
+#         return name
+#
+# with open("data/distanceData.csv", mode='r',encoding='utf-8-sig') as distances:
+#     dist = list(csv.reader(distances))
+#     def distance(r,c):
+#         distances = dist[r][c]
+#         if distances  == '' or "":
+#             distances = dist[c][r]
+#         t =+ float(distances)
+#         return t
+#
+#     # pulls in travel time and formats to hour and minute
+#     # time complexity: O(n)
+#     def truckDistance(dist, schedule):
+#         timeDist = dist/18
+#         timeMin = '{0:02.0f}:{1:02.0f}'.format(*divmod(timeDist * 60,60))
+#         return timeMin
+#
+#     print(truckDistance(100,1))
+#     print(len(packages.firstTruck()))
+#     print(packages.firstTruck())
+#     print(locationNames())
 
-    print(len(packages.firstTruck()))
-
-
+    # Tests the shortest path function
     while len(packages.firstTruck()) != 0:
+        counter = 0
         for row in name:
             for i in range(16):
                 # print("Truck:",packages.firstTruck()[i][1],"Package List: ", row[2])
-                if packages.firstTruck()[i][1] == row[2]:
+                if packages.firstTruck()[i][1] == row[2] and packages.firstTruck()[i][8] != 'Delivered':
                     k.shortestPath(int(row[0]))
-                    packages.firstTruck().remove(packages.firstTruck()[i][1])
+                    packages.firstTruck()[i][8] = 'Delivered'
+                    counter += 1
+                    print("counter",counter)
+
+
 
