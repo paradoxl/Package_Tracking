@@ -42,6 +42,8 @@ class Graph:
                     print("location name for next stop", names[1])
             print("Location id for next stop", table.getValue(min(dist)))
             print("minmum distance location from this stop" ,min(dist))
+            totals =+ min(dist)
+            print("distance traveled", totals)
 
     # create the graph given in above figure
 with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
@@ -61,14 +63,17 @@ with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
 
 with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
     name = csv.reader(names)
+    #place this in a list so we can also remove it for the loop to function.
     i = 0
 
-    for names in name:
-        # print("list",names[1])
-        if packages.firstTruck()[i][1].__contains__(names[1]):
-            k.shortestPath(int(names[0]))
-        i += 1
+    print(len(packages.firstTruck()))
 
 
-
+    while len(packages.firstTruck()) != 0:
+        for row in name:
+            for i in range(16):
+                # print("Truck:",packages.firstTruck()[i][1],"Package List: ", row[2])
+                if packages.firstTruck()[i][1] == row[2]:
+                    k.shortestPath(int(row[0]))
+                    packages.firstTruck().remove(packages.firstTruck()[i][1])
 
