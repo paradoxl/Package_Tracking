@@ -53,3 +53,9 @@ def secondTruck():
     return truckTwo
 def thirdTruck():
     return truckThree
+
+def packageList():
+    list = []
+    for packages in package:
+        list.append(packages)
+    return list

@@ -63,7 +63,6 @@ with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
             else:
                 weight = float(distances[i][j])
                 k.addEdge(i,j,weight)
-    print(k.shortestPath(3))
 
 
 with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
@@ -93,36 +92,53 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
 #     print(packages.firstTruck())
 #     print(locationNames())
 
-    print(packages.firstTruck())
     # print(packages.secondTruck())
     # print(packages.thirdTruck())
 # Tests the shortest path function
+    print(distances)
+    def getBackToHub(location):
+        helper = 69
+        helper = distances[location][0]
+        print(helper,"here")
+        return float(helper)
+
+    def leaveHub(location):
+        if packages.firstTruck()[1] ==
+
+    print("Packages",packages.firstTruck()[1][1])
+
     while True:
         counter = 0
         counter2 = 0
         counter3 = 0
-        totalDistanceOne = 0
+        total = 0
         totalDistanceTwo = 0
         totalDistanceThree = 0
+        secondDriverDone = False
         for row in name:
             for i in range(16):
                 #truck one
                 if packages.firstTruck()[i][1] == row[2] and packages.firstTruck()[i][10] != 'Delivered':
-                    totalDistanceOne += k.shortestPath(int(row[0]))
+                    total += k.shortestPath(int(row[0]))
                     packages.firstTruck()[i][10] = 'Delivered'
             for i in range(12):
                 #truck two
                 if packages.secondTruck()[i][1] == row[2] and packages.secondTruck()[i][10] != 'Delivered':
-                    totalDistanceOne += k.shortestPath(int(row[0]))
+                    total += k.shortestPath(int(row[0]))
                     packages.secondTruck()[i][10] = 'Delivered'
-                
-                #truck thee
+                    print(i)
+                    if i == int(11):
+                        #from current to hub
+                        total += getBackToHub(int(row[0]))
+                        secondDriverDone = True
+                        #truck thee
                 if packages.thirdTruck()[i][1] == row[2] and packages.thirdTruck()[i][10] != 'Delivered':
-                    totalDistanceThree += k.shortestPath(int(row[0]))
+                    total += k.shortestPath(int(row[0]))
                     packages.thirdTruck()[i][10] = 'Delivered'
-        print(packages.firstTruck())
+                    print("here")
         # print(packages.secondTruck())
-        total = totalDistanceOne + totalDistanceTwo + totalDistanceThree
+
+        print(packages.thirdTruck())
         print(total,"Miles driven")
         break
     #
