@@ -4,6 +4,7 @@ import sys
 from hashTable import HashTable
 import packages
 table = HashTable()
+reverse = HashTable()
 class Graph:
     def __init__(self, V: int):
         self.V = V
@@ -32,6 +33,7 @@ class Graph:
         for i in range(self.V-1):
             # print(f"{i} \t\t {dist[i]}")
             table.set(dist[i], i)
+            reverse.set(i,dist[i])
             if(i == src):
                 dist[i] = sys.maxsize
 
@@ -40,11 +42,13 @@ class Graph:
 
             for names in name:
                 if int(names[0]) == table.getValue(min(dist)):
-                    X = 0
+                    X = min(dist)
             # print("location name for next stop", names[1])
             # print("Location id for next stop", table.getValue(min(dist)))
             # print("minmum distance location from this stop" ,min(dist))
-            return table.getValue(min(dist))
+            #
+
+            return reverse.getValue(table.getValue(min(dist)))
 
 
     # create the graph given in above figure
@@ -59,8 +63,7 @@ with open("data/distanceData.csv" ,encoding='utf-8-sig') as distance:
             else:
                 weight = float(distances[i][j])
                 k.addEdge(i,j,weight)
-
-    # k.shortestPath(3)
+    print(k.shortestPath(3))
 
 
 with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
@@ -90,8 +93,10 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
 #     print(packages.firstTruck())
 #     print(locationNames())
 
-
-    # # Tests the shortest path function
+    print(packages.firstTruck())
+    # print(packages.secondTruck())
+    # print(packages.thirdTruck())
+# Tests the shortest path function
     while True:
         counter = 0
         counter2 = 0
@@ -102,30 +107,21 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
         for row in name:
             for i in range(16):
                 #truck one
-                if packages.firstTruck()[i][1] == row[2] and packages.firstTruck()[i][8] != 'Delivered':
+                if packages.firstTruck()[i][1] == row[2] and packages.firstTruck()[i][10] != 'Delivered':
                     totalDistanceOne += k.shortestPath(int(row[0]))
-                    packages.firstTruck()[i][8] = 'Delivered'
-                    counter += 1
-                    # print(totalDistanceOne)
-                    # print("counter for truck one",counter)
-                    print("next stop", k.shortestPath(int(row[0])))
-                    print("running total", totalDistanceOne)
+                    packages.firstTruck()[i][10] = 'Delivered'
             for i in range(12):
                 #truck two
-                if packages.secondTruck()[i][1] == row[2] and packages.secondTruck()[i][8] != 'Delivered':
-                    totalDistanceTwo += k.shortestPath(int(row[0]))
-                    packages.secondTruck()[i][8] = 'Delivered'
-                    counter2 +=1
-                    # print("Counter for truck two", counter2)
-
+                if packages.secondTruck()[i][1] == row[2] and packages.secondTruck()[i][10] != 'Delivered':
+                    totalDistanceOne += k.shortestPath(int(row[0]))
+                    packages.secondTruck()[i][10] = 'Delivered'
+                
                 #truck thee
-                if packages.thirdTruck()[i][1] == row[2] and packages.thirdTruck()[i][8] != 'Delivered':
+                if packages.thirdTruck()[i][1] == row[2] and packages.thirdTruck()[i][10] != 'Delivered':
                     totalDistanceThree += k.shortestPath(int(row[0]))
-                    packages.thirdTruck()[i][8] = 'Delivered'
-                    counter3 +=1
-                    # print("Counter for truck three",counter3)
-
-
+                    packages.thirdTruck()[i][10] = 'Delivered'
+        print(packages.firstTruck())
+        # print(packages.secondTruck())
         total = totalDistanceOne + totalDistanceTwo + totalDistanceThree
         print(total,"Miles driven")
         break
