@@ -30,21 +30,21 @@ class Graph:
 
         #retruns the min value and sets current location to max value to not create loop
         for i in range(self.V-1):
-            print(f"{i} \t\t {dist[i]}")
+            # print(f"{i} \t\t {dist[i]}")
             table.set(dist[i], i)
             if(i == src):
                 dist[i] = sys.maxsize
+
         with open("data/locationNames.csv",mode='r', encoding='utf-8-sig') as names:
             name = csv.reader(names)
 
             for names in name:
                 if int(names[0]) == table.getValue(min(dist)):
-                    print("location name for next stop", names[1])
-            print("Location id for next stop", table.getValue(min(dist)))
-            print("minmum distance location from this stop" ,min(dist))
-            totals =+ min(dist)
-            print("distance traveled", totals)
-
+                    X = 0
+            # print("location name for next stop", names[1])
+            # print("Location id for next stop", table.getValue(min(dist)))
+            # print("minmum distance location from this stop" ,min(dist))
+            return table.getValue(min(dist))
 
 
     # create the graph given in above figure
@@ -90,17 +90,44 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
 #     print(packages.firstTruck())
 #     print(locationNames())
 
-    # Tests the shortest path function
-    while len(packages.firstTruck()) != 0:
+
+    # # Tests the shortest path function
+    while True:
         counter = 0
+        counter2 = 0
+        counter3 = 0
+        totalDistanceOne = 0
+        totalDistanceTwo = 0
+        totalDistanceThree = 0
         for row in name:
             for i in range(16):
-                # print("Truck:",packages.firstTruck()[i][1],"Package List: ", row[2])
+                #truck one
                 if packages.firstTruck()[i][1] == row[2] and packages.firstTruck()[i][8] != 'Delivered':
-                    k.shortestPath(int(row[0]))
+                    totalDistanceOne += k.shortestPath(int(row[0]))
                     packages.firstTruck()[i][8] = 'Delivered'
                     counter += 1
-                    print("counter",counter)
+                    # print(totalDistanceOne)
+                    # print("counter for truck one",counter)
+                    print("next stop", k.shortestPath(int(row[0])))
+                    print("running total", totalDistanceOne)
+            for i in range(12):
+                #truck two
+                if packages.secondTruck()[i][1] == row[2] and packages.secondTruck()[i][8] != 'Delivered':
+                    totalDistanceTwo += k.shortestPath(int(row[0]))
+                    packages.secondTruck()[i][8] = 'Delivered'
+                    counter2 +=1
+                    # print("Counter for truck two", counter2)
+
+                #truck thee
+                if packages.thirdTruck()[i][1] == row[2] and packages.thirdTruck()[i][8] != 'Delivered':
+                    totalDistanceThree += k.shortestPath(int(row[0]))
+                    packages.thirdTruck()[i][8] = 'Delivered'
+                    counter3 +=1
+                    # print("Counter for truck three",counter3)
 
 
+        total = totalDistanceOne + totalDistanceTwo + totalDistanceThree
+        print(total,"Miles driven")
+        break
+    #
 
