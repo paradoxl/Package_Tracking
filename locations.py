@@ -102,11 +102,13 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
         print(helper,"here")
         return float(helper)
 
-    def leaveHub(location):
-        if packages.firstTruck()[1] ==
 
-    print("Packages",packages.firstTruck()[1][1])
 
+
+    # print("Packages",packages.firstTruck()[1][1])
+    first = True
+    first2 = True
+    first3 = True
     while True:
         counter = 0
         counter2 = 0
@@ -119,26 +121,37 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
             for i in range(16):
                 #truck one
                 if packages.firstTruck()[i][1] == row[2] and packages.firstTruck()[i][10] != 'Delivered':
+                    if first is True:
+                        total += getBackToHub(int(row[0]))
+                        first = False
+                        print("count")
                     total += k.shortestPath(int(row[0]))
                     packages.firstTruck()[i][10] = 'Delivered'
             for i in range(12):
                 #truck two
                 if packages.secondTruck()[i][1] == row[2] and packages.secondTruck()[i][10] != 'Delivered':
+                    if first2 is True:
+                        total += getBackToHub(int(row[0]))
+                        first2 = False
+                        print("count2")
                     total += k.shortestPath(int(row[0]))
                     packages.secondTruck()[i][10] = 'Delivered'
-                    print(i)
                     if i == int(11):
                         #from current to hub
                         total += getBackToHub(int(row[0]))
                         secondDriverDone = True
                         #truck thee
                 if packages.thirdTruck()[i][1] == row[2] and packages.thirdTruck()[i][10] != 'Delivered':
+                    if first3 is True:
+                        total += getBackToHub(int(row[0]))
+                        first3 = False
+                        print("count3")
                     total += k.shortestPath(int(row[0]))
                     packages.thirdTruck()[i][10] = 'Delivered'
-                    print("here")
+
         # print(packages.secondTruck())
 
-        print(packages.thirdTruck())
+
         print(total,"Miles driven")
         break
     #
