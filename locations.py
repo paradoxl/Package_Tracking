@@ -3,6 +3,8 @@ import heapq
 import sys
 from hashTable import HashTable
 import packages
+import time
+
 table = HashTable()
 reverse = HashTable()
 class Graph:
@@ -47,7 +49,7 @@ class Graph:
             # print("Location id for next stop", table.getValue(min(dist)))
             # print("minmum distance location from this stop" ,min(dist))
             #
-
+            print(table.getValue(min(dist)))
             return reverse.getValue(table.getValue(min(dist)))
 
 
@@ -95,20 +97,30 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
     # print(packages.secondTruck())
     # print(packages.thirdTruck())
 # Tests the shortest path function
-    print(distances)
-    def getBackToHub(location):
+    def hub(location):
         helper = 69
         helper = distances[location][0]
-        print(helper,"here")
         return float(helper)
 
 
+    def distToTime(distance):
+        t = distance / 18
+        mins = '{0:02.0f}:{1:02.0f}'.format(*divmod(t * 60, 60))
+        return mins
 
-
+    for i in range(16):
+        packages.firstTruck()[i][10] = 'In Transit'
+    for i in range(12):
+        packages.secondTruck()[i][10] = 'In Transit'
     # print("Packages",packages.firstTruck()[1][1])
     first = True
     first2 = True
     first3 = True
+
+    truckOneLeaveTime = '{0:02.0f}:{1:02.0f}'.format(10,30,00)
+
+    print(truckOneLeaveTime)
+    #Time complexity O(n^3)
     while True:
         counter = 0
         counter2 = 0
@@ -117,42 +129,54 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
         totalDistanceTwo = 0
         totalDistanceThree = 0
         secondDriverDone = False
+
+
         for row in name:
             for i in range(16):
                 #truck one
                 if packages.firstTruck()[i][1] == row[2] and packages.firstTruck()[i][10] != 'Delivered':
+                    packageLocation = packages.firstTruck()[i][1]
                     if first is True:
-                        total += getBackToHub(int(row[0]))
+                        total += hub(int(row[0]))
+                        timestamp = distToTime(hub(int(row[0])))
                         first = False
-                        print("count")
+                        print(truckOneLeaveTime)
                     total += k.shortestPath(int(row[0]))
                     packages.firstTruck()[i][10] = 'Delivered'
             for i in range(12):
                 #truck two
                 if packages.secondTruck()[i][1] == row[2] and packages.secondTruck()[i][10] != 'Delivered':
                     if first2 is True:
-                        total += getBackToHub(int(row[0]))
+                        total += hub(int(row[0]))
                         first2 = False
-                        print("count2")
                     total += k.shortestPath(int(row[0]))
                     packages.secondTruck()[i][10] = 'Delivered'
                     if i == int(11):
                         #from current to hub
-                        total += getBackToHub(int(row[0]))
+                        total += hub(int(row[0]))
                         secondDriverDone = True
-                        #truck thee
-                if packages.thirdTruck()[i][1] == row[2] and packages.thirdTruck()[i][10] != 'Delivered':
-                    if first3 is True:
-                        total += getBackToHub(int(row[0]))
-                        first3 = False
-                        print("count3")
-                    total += k.shortestPath(int(row[0]))
-                    packages.thirdTruck()[i][10] = 'Delivered'
+
+
+
+            if secondDriverDone is True:
+                for row in name:
+                    for i in range(12):
+                        packages.thirdTruck()[i][10] = 'In Transit'
+                for i in range(12): #truck thee
+                    if packages.thirdTruck()[i][1] == row[2] and packages.thirdTruck()[i][10] != 'Delivered':
+                        if first3 is True:
+                            total += hub(int(row[0]))
+                            first3 = False
+                        total += k.shortestPath(int(row[0]))
+                        packages.thirdTruck()[i][10] = 'Delivered'
 
         # print(packages.secondTruck())
 
 
         print(total,"Miles driven")
+        print(packages.thirdTruck())
+        packages.packageList()
+
         break
     #
 
