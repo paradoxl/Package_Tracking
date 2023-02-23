@@ -23,7 +23,7 @@ with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
         deliveredAt = '{0:02.0f}:{1:02.0f}'.format(00,00,00)
         #assemble variables into package object
         package = [id,address,city,state,zip,deadline,kilo,notes,start,location,status,deliveredAt]
-        HT.set(id, package)
+        HT.set(int(id),package)
         #assign packages to truck two
         if 'Can' in package[7]:
             truckTwo.append(package)
@@ -56,9 +56,11 @@ def thirdTruck():
     return truckThree
 
 def packageList():
-    with open('data/packageData.csv') as pData:
+    with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as pData:
         reader = csv.reader(pData)
 
         for row in reader:
-            value = HT.getValue(row[0])
+            print(row[0])
+            value = HT.getValue(int(row[0]))
+
             print("packages",value)
