@@ -1,9 +1,11 @@
 import csv
+import functools
 import heapq
 import sys
 from hashTable import HashTable
 import packages
-from datetime import time
+from datetime import time, timedelta
+
 table = HashTable()
 reverse = HashTable()
 class Graph:
@@ -104,8 +106,15 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
 
     def distToTime(distance):
         t = distance / 18
-        mins = '{1:02.0f}'.format(*divmod(t * 60, 60))
+        _time = (distance * 3600) / 18
+        mins = '{0:02.0f}:{1:02.0f}'.format(*divmod(t * 60, 60))
+        test = divmod(t*60,60)
+        res = functools.reduce(lambda sub, ele: sub * 10 + ele, test)
+        conv = '{0:02.0f}:{1:02.0f}'.format(*divmod(res * 60, 60))
+        print("conversion",conv)
+        print(type(conv))
         return mins
+
 
     for i in range(16):
         packages.firstTruck()[i][10] = 'In Transit'
@@ -118,7 +127,7 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
 
 
     truckOneLeaveTime = time(10,30,00)
-
+    dTime = 0.0
 
     #Time complexity O(n^3)
     while True:
@@ -138,12 +147,14 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
                     packageLocation = packages.firstTruck()[i][1]
                     if first is True:
                         total += hub(int(row[0]))
-                        # timestamp = distToTime(hub(int(row[0])))
-
                         first = False
+
                     total += k.shortestPath(int(row[0]))
-                    timestamp = distToTime(float(row[0]))
+                    truckOneLeaveTime = distToTime(int(row[0]))
+                    print(int(row[0]))
                     packages.firstTruck()[i][10] = 'Delivered'
+                    packages.firstTruck()[i][11] = 'Delivered at: ', truckOneLeaveTime
+
             for i in range(12):
                 #truck two
                 if packages.secondTruck()[i][1] == row[2] and packages.secondTruck()[i][10] != 'Delivered':
@@ -169,7 +180,7 @@ with open( "data/locationNames.csv", mode='r', encoding='utf-8-sig') as names:
         # print(packages.secondTruck())
 
         print(total,"Miles driven")
-
+        packages.packageList()
 
         break
     #
