@@ -2,14 +2,15 @@ import datetime
 
 
 class trucks:
-    def __init__(self,packages,distanceTraveled,currLoc,time):
+    def __init__(self,packages,distanceTraveled,time,address):
         self.packages = packages
         self.distanceTraveled = distanceTraveled
-        self.currLoc = currLoc
+
         self.time = time
+        self.address = address
 
     def printTruck(self):
-        print(self.packages,self.distanceTraveled,self.currLoc,self.time)
+        print(self.packages,self.distanceTraveled,self.time,self.address)
 
     def printTruckOne(self):
         return

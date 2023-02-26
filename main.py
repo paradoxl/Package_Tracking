@@ -2,13 +2,13 @@ import csv
 import datetime
 import sys
 
-from Package_Tracking.trucks import trucks
+from trucks import trucks
 from hashTable import HashTable
 
 #pull in and create trucks
-firstTruck = trucks([1,13,14,15,16,20,29,30,31,34,37,40],0.0,None,datetime.timedelta(hours=8))
-secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,None,datetime.timedelta(hours=10,minutes=30))
-thirdTruck = trucks([2,4,5,6,7,8,9,10,11,25,28,32,33], 0.0,None,datetime.timedelta(hours=9,minutes=5))
+firstTruck = trucks([1,13,14,15,16,20,29,30,31,34,37,40],0.0,datetime.timedelta(hours=8),'4001 South 700 East')
+secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,datetime.timedelta(hours=10,minutes=30),'4001 South 700 East')
+thirdTruck = trucks([2,4,5,6,7,8,9,10,11,25,28,32,33], 0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East')
 
 #generate packages
 with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
@@ -74,28 +74,26 @@ def address(val):
 
 # arranges the packages on the truck based on the most efficient route.
 def load(val):
-    ND = []
-    for id in val.packages:
-        package = HT.getValue(id)
-        ND.append(package)
+
+    not_delivered = []
+    for packageID in val.packages:
+        packages = HT.getValue(packageID)
+        not_delivered.append(packages)
     val.packages.clear()
-
-    while not len(ND):
-        next = sys.maxsize
-        pack = None
-        for i in ND:
-            if distanceCalc(address(val.address),distanceCalc(package.address)) <= next:
-                next = distanceCalc(address(val.address),address(package.address))
-                pack = package
-        val.packages.append(pack.id)
-        ND.remove(pack)
-        val.distance += next
-        val.address = next
-        val.time += datetime.timedelta(hours=next/18)
-        next.deliveryTime = val.time
-
-
-
-
+    while len(not_delivered) > 0:
+        newAddress = sys.maxsize
+        newPackage = None
+        for packages in not_delivered:
+            ""
+            if distanceCalc(address(val.address),address(packages.address)) <= newAddress:
+                newAddress = distanceCalc(address(val.address),address(packages[1]))
+                newPackage = packages
+        val.packages.append(newPackage.id)
+        not_delivered.remove(newPackage)
+        val.mileage += newAddress
+        val.address = newPackage.address
+        val.time += datetime.timedelta(hours=newAddress / 18)
+        newPackage.delivery_time = val.time
+        newPackage.departure_time = val.depart_time
 
 load(firstTruck)
