@@ -12,7 +12,7 @@ HT = HashTable()
 #Time complexity O(1)
 firstTruck = trucks([1,13,14,15,16,20,29,30,31,34,37,40,25],0.0,datetime.timedelta(hours=8),'4001 South 700 East',datetime.timedelta(hours=8))
 secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East',datetime.timedelta(hours=9,minutes=5))
-thirdTruck = trucks([2,4,5,7,8,9,10,11,28,32,33], 0.0,datetime.timedelta(hours=9,minutes=50),'4001 South 700 East',datetime.timedelta(hours=9,minutes=50))
+thirdTruck = trucks([2,4,5,7,8,9,10,11,28,32,33], 0.0,datetime.timedelta(hours=10,minutes=24),'4001 South 700 East',datetime.timedelta(hours=10,minutes=24))
 print()
 with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as packageObjectData:
     p = list(csv.reader(packageObjectData))
@@ -92,21 +92,28 @@ def address(val):
 # each package address. 
 def load(val):
 
-    ND = []
+    stagingPackages = []
     for packageID in val.packages:
         packages = HT.getValue(packageID)
-        ND.append(packages)
-        print(packages.status)
+        stagingPackages.append(packages)
     val.packages.clear()
-    while len(ND) > 0:
+    while len(stagingPackages) > 0:
         newAddress = float(sys.maxsize)
         newPackage = None
-        for packages in ND:
+        for packages in stagingPackages:
+            #retruns each truck to the hub
+            if len(stagingPackages) == 1:
+                toHub = distanceCalc(int(address(val.address)), int(0))
+                val.time += datetime.timedelta(hours=toHub / 18)
+            #checks that the address for package nine is changed. The truck with
+            #this package does not leave until after the correct address is identified. So the time factor is not required.
+            if packages.id == 9:
+                packages.address = "410 S State St"
             if distanceCalc((int(address(val.address))), int(address(packages.address))) <= newAddress:
                 newAddress = distanceCalc(address(val.address),address(packages.address))
                 newPackage = packages
         val.packages.append(newPackage)
-        ND.remove(newPackage)
+        stagingPackages.remove(newPackage)
         val.distanceTraveled += newAddress
         val.address = newPackage.address
         val.time += datetime.timedelta(hours=newAddress / 18)
@@ -116,6 +123,8 @@ def load(val):
 
 
 
+
+#all three trucks are returned to the hub. We could leave two in the world but hey...Realism
 load(firstTruck)
 load(secondTruck)
 load(thirdTruck)
@@ -127,14 +136,19 @@ print("Third truck returned to hub:",thirdTruck.time)
 
 
 
-menu = input("Welcome! Please select a menu item below."'\n' "1: All packages" '\n'"2: Search all packages"'\n' "3: Search specific package"'\n')
+menu = input("Welcome! Please select a menu item below."'\n' "1: All packages" '\n'"2: Search specific package packages"'\n' "3: Search all packages based on time"'\n' "4: Search Specific Package based on time"'\n')
 
 if int(menu) == 1:
     print("Computing:")
-    for i in range(41):
-        print(HT.getValue(i))
+    for i in range(1,41):
+        val = HT.getValue(i)
+        val.status = "Delivered"
+        print(val)
 if int(menu) == 2:
-    print("")
+    val = input("Please enter the ID of the package you are looking for")
+    packageVal = HT.getValue(int(val))
+    packageVal.status = "Delivered"
+    print(packageVal)
 if int(menu) == 3:
     timeSearchOne = input("Please enter the start time you wish to see in HH:MM:SS"'\n')
     (h, m, s) = timeSearchOne.split(":")
@@ -147,3 +161,14 @@ if int(menu) == 3:
         package = HT.getValue(packageID)
         package.stat(timeSearchSplit,timeSearchSplitTwo)
         print(package)
+if int(menu) == 4:
+    id = input("Please enter the Id of the package you are looking for")
+    timeSearchOne = input("Please enter the start time you wish to see in HH:MM:SS"'\n')
+    (h, m, s) = timeSearchOne.split(":")
+    timeSearchSplit = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+    timeSearchTwo = input("Please enter the end time you wish to see in HH:MM:SS"'\n')
+    (h2, m2, s2) = timeSearchTwo.split(":")
+    timeSearchSplitTwo = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
+    package = HT.getValue(int(id))
+    package.stat(timeSearchSplit, timeSearchSplitTwo)
+    print(package)
