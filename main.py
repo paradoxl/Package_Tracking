@@ -1,40 +1,35 @@
 import csv
 import datetime
 import sys
-
+from packages import packagesClass
 from trucks import trucks
 from hashTable import HashTable
 
+HT = HashTable()
 #pull in and create trucks
 #Time complexity O(1)
 firstTruck = trucks([1,13,14,15,16,20,29,30,31,34,37,40],0.0,datetime.timedelta(hours=8),'4001 South 700 East')
-secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,datetime.timedelta(hours=10,minutes=30),'4001 South 700 East')
-thirdTruck = trucks([2,4,5,6,7,8,9,10,11,25,28,32,33], 0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East')
+secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East')
+thirdTruck = trucks([2,4,5,7,8,9,10,11,25,28,32,33], 0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East')
+print()
+with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as packageObjectData:
+    p = list(csv.reader(packageObjectData))
+    for package in p:
+        id = int(package[0])
+        address = package[1]
+        city = package[2]
+        state = package[3]
+        zip = package[4]
+        deadline = package[5]
+        kilo = package[6]
+        notes = package[7]
+        start = package[8]
+        location = package[9]
+        status = package[10]
+        deliveredAt = package[11]
 
-#generate packages
-#Time complexity O(n)
-with open("data/packageData.csv",mode='r',encoding='utf-8-sig') as file:
-    HT = HashTable()
-    PL = HashTable()
-    reader = csv.reader(file)
-    #pull data in to variables Time Complexity: O(n)
-    for row in reader:
-        id = row[0]
-        address = row[1]
-        city = row[2]
-        state = row[3]
-        zip = row[4]
-        deadline = row[5]
-        kilo = row[6]
-        notes = row[7]
-        start = ''
-        location = ''
-        status = 'at hub'
-        deliveredAt = '{0:02.0f}:{1:02.0f}'.format(00,00,00)
-        #assemble variables into package object
-        package = [id,address,city,state,zip,deadline,kilo,notes,start,location,status,deliveredAt]
-        HT.set(int(id),package[1])
-        PL.set(int(id),package)
+        packageObject = packagesClass(id,address,city,state,zip,deadline,kilo,notes,start,location,status,deliveredAt)
+        HT.set(id,packageObject)
 
 #determines the values of package status
 #Time complexity O(n)
@@ -49,12 +44,12 @@ def setStat(conv):
 
 # returns all packages
 # Time complexity O(n)
-def packageList():
-    with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as pData:
-        reader = csv.reader(pData)
-        for row in reader:
-            value = PL.getValue(int(row[0]))
-            print(value)
+# def packageList():
+#     with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as pData:
+#         reader = csv.reader(pData)
+#         for row in reader:
+#             value = PL.getValue(int(row[0]))
+#             print(value)
 # returns packages based on id
 # Time complexity O(1)
 def searchPackageByID(ID):
@@ -106,33 +101,50 @@ def address(val):
 # each package address. 
 def load(val):
 
-    not_delivered = []
+    ND = []
     for packageID in val.packages:
         packages = HT.getValue(packageID)
-        not_delivered.append(packages)
+        ND.append(packages)
+        print(packages.status)
     val.packages.clear()
-    while len(not_delivered) > 0:
+    while len(ND) > 0:
         newAddress = float(sys.maxsize)
         newPackage = None
-        for packages in not_delivered:
-            if distanceCalc(int(address(val.address)), int(address(packages))) <= newAddress:
-                newAddress = distanceCalc(address(val.address),address(packages))
+        for packages in ND:
+            if distanceCalc((int(address(val.address))), int(address(packages.address))) <= newAddress:
+                newAddress = distanceCalc(address(val.address),address(packages.address))
                 newPackage = packages
         val.packages.append(newPackage)
-        not_delivered.remove(newPackage)
+        ND.remove(newPackage)
         val.distanceTraveled += newAddress
-        val.address = newPackage
+        val.address = newPackage.address
         val.time += datetime.timedelta(hours=newAddress / 18)
-        newPackage = val.time
-        newPackage = val.time
+        newPackage.deliveredAt = val.time
+        newPackage.status = 'Delivered'
+
+
+
+
 def runRoute():
     load(firstTruck)
-    thirdTruck.time = firstTruck.time
+    thirdTruck.time = secondTruck.time
     load(secondTruck)
     load(thirdTruck)
-    print("Total distance Traveled", firstTruck.distanceTraveled + secondTruck.distanceTraveled + thirdTruck.distanceTraveled)
-    print("First truck returned to hub",firstTruck.time)
-    print("Second truck returned to hub",secondTruck.time)
-    print("Third truck returned to hub",thirdTruck.time)
-runRoute()
+    print("Total distance Traveled:", firstTruck.distanceTraveled + secondTruck.distanceTraveled + thirdTruck.distanceTraveled)
+    print("First truck returned to hub:",firstTruck.time)
+    print("Second truck returned to hub:",secondTruck.time)
+    print("Third truck returned to hub:",thirdTruck.time)
 
+
+
+menu = input("Welcome! Please select a menu item below."'\n' "1: only distance and end times" '\n'"2: Search all packages"'\n' "3: Search specific package"'\n')
+
+if int(menu) == 1:
+    runRoute()
+
+if int(menu) == 2:
+    runRoute()
+    for i in range(41):
+        print(HT.getValue(i))
+if int(menu) == 3:
+    print("Search based on time")
