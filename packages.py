@@ -18,7 +18,14 @@ class packagesClass:
         self.status = status
         self.deliveredAt = deliveredAt
 
-
+    def stat(self, convert):
+        if self.deliveredAt > convert:
+            self.status = "in route"
+        elif self.deliveredAt < convert:
+            self.status = "Delivered"
+        else:
+            self.status = "At Hub"
 
     def __str__(self):
         return "%s,%s,%s%s,%s,%s"%("ID:",self.id,"Delivery Status: ",self.status,"Delivered At: ",self.deliveredAt)
+

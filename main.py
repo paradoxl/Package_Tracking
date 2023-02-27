@@ -1,6 +1,8 @@
 import csv
 import datetime
 import sys
+
+import packages
 from packages import packagesClass
 from trucks import trucks
 from hashTable import HashTable
@@ -120,7 +122,7 @@ def load(val):
         val.address = newPackage.address
         val.time += datetime.timedelta(hours=newAddress / 18)
         newPackage.deliveredAt = val.time
-        newPackage.status = 'Delivered'
+        # newPackage.status = 'Delivered'
 
 
 
@@ -147,4 +149,10 @@ if int(menu) == 2:
     for i in range(41):
         print(HT.getValue(i))
 if int(menu) == 3:
-    print("Search based on time")
+    timeSearch = input("Please enter the time you wish to see in HH:MM:SS")
+    (h, m, s) = timeSearch.split(":")
+    timeSearchSplit = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+    runRoute()
+    for i in range(41):
+        val = HT.getValue(int(i))
+
