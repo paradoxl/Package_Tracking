@@ -10,9 +10,9 @@ from hashTable import HashTable
 HT = HashTable()
 #pull in and create trucks
 #Time complexity O(1)
-firstTruck = trucks([1,13,14,15,16,20,29,30,31,34,37,40],0.0,datetime.timedelta(hours=8),'4001 South 700 East')
-secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East')
-thirdTruck = trucks([2,4,5,7,8,9,10,11,25,28,32,33], 0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East')
+firstTruck = trucks([1,13,14,15,16,20,29,30,31,34,37,40,25],0.0,datetime.timedelta(hours=8),'4001 South 700 East',datetime.timedelta(hours=8))
+secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East',datetime.timedelta(hours=9,minutes=5))
+thirdTruck = trucks([2,4,5,7,8,9,10,11,28,32,33], 0.0,datetime.timedelta(hours=9,minutes=50),'4001 South 700 East',datetime.timedelta(hours=9,minutes=50))
 print()
 with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as packageObjectData:
     p = list(csv.reader(packageObjectData))
@@ -32,17 +32,6 @@ with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as packageObject
 
         packageObject = packagesClass(id,address,city,state,zip,deadline,kilo,notes,start,location,status,deliveredAt)
         HT.set(id,packageObject)
-
-#determines the values of package status
-#Time complexity O(n)
-def setStat(conv):
-    if deliveredAt < conv:
-        status = "Delivered"
-    elif deliveredAt > conv:
-        status = "On the way"
-    else:
-        status = "At hub"
-
 
 # returns all packages
 # Time complexity O(n)
@@ -121,38 +110,40 @@ def load(val):
         val.distanceTraveled += newAddress
         val.address = newPackage.address
         val.time += datetime.timedelta(hours=newAddress / 18)
+        newPackage.start = val.statTime
         newPackage.deliveredAt = val.time
-        # newPackage.status = 'Delivered'
 
 
 
 
-def runRoute():
-    load(firstTruck)
-    thirdTruck.time = secondTruck.time
-    load(secondTruck)
-    load(thirdTruck)
-    print("Total distance Traveled:", firstTruck.distanceTraveled + secondTruck.distanceTraveled + thirdTruck.distanceTraveled)
-    print("First truck returned to hub:",firstTruck.time)
-    print("Second truck returned to hub:",secondTruck.time)
-    print("Third truck returned to hub:",thirdTruck.time)
+load(firstTruck)
+load(secondTruck)
+load(thirdTruck)
+
+print("Total distance Traveled:", firstTruck.distanceTraveled + secondTruck.distanceTraveled + thirdTruck.distanceTraveled)
+print("First truck returned to hub:",firstTruck.time)
+print("Second truck returned to hub:",secondTruck.time)
+print("Third truck returned to hub:",thirdTruck.time)
 
 
 
-menu = input("Welcome! Please select a menu item below."'\n' "1: only distance and end times" '\n'"2: Search all packages"'\n' "3: Search specific package"'\n')
+menu = input("Welcome! Please select a menu item below."'\n' "1: All packages" '\n'"2: Search all packages"'\n' "3: Search specific package"'\n')
 
 if int(menu) == 1:
-    runRoute()
-
-if int(menu) == 2:
-    runRoute()
+    print("Computing:")
     for i in range(41):
         print(HT.getValue(i))
+if int(menu) == 2:
+    print("")
 if int(menu) == 3:
-    timeSearch = input("Please enter the time you wish to see in HH:MM:SS")
-    (h, m, s) = timeSearch.split(":")
+    timeSearchOne = input("Please enter the start time you wish to see in HH:MM:SS"'\n')
+    (h, m, s) = timeSearchOne.split(":")
     timeSearchSplit = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
-    runRoute()
-    for i in range(41):
-        val = HT.getValue(int(i))
+    timeSearchTwo = input("Please enter the end time you wish to see in HH:MM:SS"'\n')
+    (h2,m2,s2) = timeSearchTwo.split(":")
+    timeSearchSplitTwo = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
 
+    for packageID in range(1,41):
+        package = HT.getValue(packageID)
+        package.stat(timeSearchSplit,timeSearchSplitTwo)
+        print(package)
