@@ -9,11 +9,11 @@ from hashTable import HashTable
 
 HT = HashTable()
 #pull in and create trucks
-#Time complexity O(1)
 firstTruck = trucks([1,13,14,15,16,20,29,30,31,34,37,40,25],0.0,datetime.timedelta(hours=8),'4001 South 700 East',datetime.timedelta(hours=8))
 secondTruck = trucks([3,6,12,17,18,19,21,22,23,24,26,27,35,36,38,39],0.0,datetime.timedelta(hours=9,minutes=5),'4001 South 700 East',datetime.timedelta(hours=9,minutes=5))
 thirdTruck = trucks([2,4,5,7,8,9,10,11,28,32,33], 0.0,datetime.timedelta(hours=10,minutes=24),'4001 South 700 East',datetime.timedelta(hours=10,minutes=24))
-print()
+
+
 with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as packageObjectData:
     p = list(csv.reader(packageObjectData))
     for package in p:
@@ -33,19 +33,6 @@ with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as packageObject
         packageObject = packagesClass(id,address,city,state,zip,deadline,kilo,notes,start,location,status,deliveredAt)
         HT.set(id,packageObject)
 
-# returns all packages
-# Time complexity O(n)
-# def packageList():
-#     with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as pData:
-#         reader = csv.reader(pData)
-#         for row in reader:
-#             value = PL.getValue(int(row[0]))
-#             print(value)
-# returns packages based on id
-# Time complexity O(1)
-def searchPackageByID(ID):
-    value = HT.getValue(int(ID))
-    return value
 
 # calculates distances from row col
 # Time complexity O(n^2)
