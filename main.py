@@ -41,6 +41,7 @@ with open('data/packageData.csv',mode='r',encoding='utf-8-sig') as packageObject
 
 # calculates distances from row col
 # Time complexity O(n^2)
+# S(N)
 def distanceCalc(r,c):
     with open('data/distanceData.csv',mode='r',encoding='utf-8-sig') as dist:
         distance = 0
@@ -65,6 +66,7 @@ def distanceCalc(r,c):
 
 #return addresses id
 #Time Complexity O(n)
+# S(N)
 def address(val):
     with open("data/locationNames.csv",mode='r',encoding='utf-8-sig') as file:
         names = list(csv.reader(file))
@@ -139,6 +141,14 @@ def load(val):
         newPackage.deliveredAt = val.time
 
 
+def hashDemo(value):
+    print("Demo:",hash(value))
+
+hashDemo(1)
+hashDemo("Test")
+hashDemo("test")
+hashDemo("Test")
+
 print("-------------------------------------------")
 print("Packages assigned to First Truck",firstTruck.packages)
 print("Packages assigned to Second Truck:",secondTruck.packages)
@@ -189,3 +199,5 @@ if int(menu) == 4:
     package = HT.getValue(int(id))
     package.stat(timeSearchSplit)
     print(package)
+
+
