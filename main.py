@@ -88,7 +88,9 @@ def address(val):
 # drive time.
 
 # once packages are loaded onto the truck we can then calculate the distance traveled based on the distances from
-# each package address. 
+# each package address.
+# Time complexity: O(N^2)
+# space Complexity: O(N)
 def load(val):
     # Acts as a staging area to organize packages
     stagingPackages = []
