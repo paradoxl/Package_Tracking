@@ -34,5 +34,5 @@ class packagesClass:
             self.deliveredAt = "Package not yet out for delivery"
 
     def __str__(self):
-        return "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"%("ID:",self.id, "Address:",self.address," City: ", self.city, " State: " , self.state , " Zip: ", self.zip, " Deadline: " , self.deadline , " Weight: " , self.kilo ,  "Deadline:Delivery Status: ",self.status," Delivered At: ",self.deliveredAt,'\n')
+        return "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"%("ID:",self.id, " Address: ",self.address," City: ", self.city, " State: " , self.state , " Zip: ", self.zip, " Deadline: " , self.deadline , " Weight: " , self.kilo , " Delivery Status: ",self.status," Delivered At: ",self.deliveredAt,'\n')
 
